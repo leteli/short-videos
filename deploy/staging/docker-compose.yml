@@ -30,6 +30,7 @@ services:
       - RABBIT_HOST
       - RABBIT_USER
       - RABBIT_PASS
+      - CLIENT_URL
     volumes:
       - ../../services/core:/app
       - ../../data/shortvideos/files/:/data/files

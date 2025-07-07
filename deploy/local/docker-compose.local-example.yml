@@ -30,6 +30,7 @@ services:
       - RABBIT_HOST=rabbit:5672
       - RABBIT_USER=editor
       - RABBIT_PASS
+      - CLIENT_URL=http://localhost:3000
     volumes:
       - ../../services/core:/app
       - ../../data/shortvideos/files/:/data/files
