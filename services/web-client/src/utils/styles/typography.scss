@@ -1,0 +1,22 @@
+@use "./rem.scss" as *;
+
+$font-family-primary: 'Roboto', sans-serif;
+$font-family-secondary: 'Open Sans', sans-serif;
+$font-family-tertiary: 'Inclusive Sans', sans-serif;
+
+$text-size-small: rem(12px);
+$text-size-medium: rem(16px);
+$text-size-medium-2: rem(18px);
+$text-size-md-lg: rem(20px);
+$text-size-large: rem(24px);
+$text-size-h1: rem(32px);
+
+$font-weight-light: 300;
+$font-weight-regular: 400;
+$font-weight-semi-bold: 600;
+$font-weight-bold: 700;
+
+$line-height-small: 1.25;
+$line-height-sm-md: 1.33;
+$line-height-medium: 1.5;
+$line-height-large: 2;

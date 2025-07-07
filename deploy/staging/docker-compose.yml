@@ -1,0 +1,99 @@
+services:
+  web-client:
+    build: 
+      context: ../../services/web-client
+      dockerfile: Dockerfile.local
+      args:
+        - NEXT_PUBLIC_API_URL=${API_URL}
+    restart: always
+    platform: linux/arm64/v8
+    ports:
+      - 3000:3000
+    environment:
+      - INTERNAL_API_URL=${INTERNAL_API_URL}
+      - IS_LOCAL=true
+    volumes:
+      - ../../services/web-client:/app
+
+  core:
+    build: 
+      context: ../../services/core
+      dockerfile: Dockerfile.local
+    restart: always
+    ports:
+      - 8000:8000
+    environment:
+      - MONGO_URI
+      - MONGO_DB_NAME
+      - PORT=${CORE_PORT}
+      - IS_LOCAL=false
+      - RABBIT_HOST
+      - RABBIT_USER
+      - RABBIT_PASS
+      - CLIENT_URL
+    volumes:
+      - ../../services/core:/app
+      - ../../data/shortvideos/files/:/data/files
+
+  socket:
+    build:
+      context: ../../services/socket
+      dockerfile: Dockerfile.local
+    restart: always
+    ports:
+      - 8001:8001
+    environment:
+      - PORT=8001
+      - IS_LOCAL=true
+      - RABBIT_HOST
+      - RABBIT_USER
+      - RABBIT_PASS
+    volumes:
+      - ../../services/socket:/app
+
+  notifications:
+    build:
+      context: ../../services/notifications
+      dockerfile: Dockerfile.local
+    restart: always
+    environment:
+      - IS_LOCAL=true
+      - RABBIT_HOST
+      - RABBIT_USER
+      - RABBIT_PASS
+      - MAIL_PORT=465
+      - MAIL_HOST=smtp.gmail.com
+      - MAIL_USER
+      - MAIL_PASS
+    volumes:
+      - ../../services/notifications:/app
+  videos:
+    build:
+      context: ../../services/videos
+      dockerfile: Dockerfile.local
+    restart: always
+    environment:
+      - IS_LOCAL=true
+      - RABBIT_HOST
+      - RABBIT_USER
+      - RABBIT_PASS
+    volumes:
+      - ../../services/videos:/app
+
+  mongo:
+    image: mongo:7
+    restart: always
+    platform: linux/arm64/v8
+    ports:
+      - 27017:27017
+
+  rabbit:
+    image: rabbitmq:3.13.3-management-alpine
+    restart: always
+    platform: linux/arm64/v8
+    environment:
+      - RABBITMQ_DEFAULT_USER=${RABBIT_USER}
+      - RABBITMQ_DEFAULT_PASS=${RABBIT_PASS}
+    ports:
+      - 5672:5672
+      - 15672:15672
