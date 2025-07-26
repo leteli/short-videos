@@ -1,0 +1,57 @@
+@use '../../../utils/styles/typography.scss';
+@use '../../../utils/styles/rem.scss' as *;
+
+.button {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    padding: rem(12px) rem(24px);
+
+    font-size: typography.$text-size-medium;
+    font-weight: typography.$font-weight-regular;
+    line-height: typography.$line-height-small;
+    color: var(--text-primary);
+    border-radius: rem(100px);
+    cursor: pointer;
+    height: rem(56px);
+
+    &.primary {
+        background: var(--accent);
+        border: rem(3px) solid var(--accent-border);
+        &:active {
+            background: var(--accent-hover);
+        }
+    }
+    &.secondary {
+        border: rem(3px) solid var(--secondary-border);
+        background: var(--white-03);
+        &:active {
+            background: var(--white-05);
+        }
+    }
+
+    &.large {
+        max-width: 100%;
+        width: rem(384px);
+    }
+}
+
+@media (hover: hover) and (pointer: fine) {
+    .button {
+        &.primary {
+            &:hover {
+                background: var(--accent-hover);
+            }
+        }
+    //     &.accent {
+    //         &:hover {
+    //             background: var(--destructive-hover);
+    //         }
+    //     }
+    //     &.secondary {
+    //         &:hover {
+    //             background: var(--white-05);
+    //         }
+    //     }
+    }
+}

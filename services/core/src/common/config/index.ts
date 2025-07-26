@@ -16,6 +16,11 @@ const getConfig = () => ({
     pass: parseString(process.env.RABBIT_PASS, 'guest'),
     host: parseString(process.env.RABBIT_HOST, 'localhost:5672'),
   },
+  auth: {
+    cookieSecret: parseString(process.env.COOKIE_SECRET, 'localCookieSecret'),
+    jwtTokenSecret: parseString(process.env.JWT_TOKEN_SECRET, 'localJwtSecret'),
+    jwtTokenExpiresInDays: parseNumber(process.env.JWT_TOKEN_EXPIRES_DAYS, 7),
+  },
 });
 
 export type Config = ReturnType<typeof getConfig>;

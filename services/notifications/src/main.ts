@@ -10,7 +10,7 @@ async function bootstrap() {
   >(AppModule, {
     inject: [ConfigService],
     useFactory: (configService: ConfigService) =>
-      getRabbitMqOptions(configService, QueueNames.Mail),
+      getRabbitMqOptions(configService, QueueNames.Notifications),
   });
   await app.listen();
 }

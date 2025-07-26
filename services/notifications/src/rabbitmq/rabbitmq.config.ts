@@ -3,7 +3,10 @@ import { RmqOptions, Transport } from '@nestjs/microservices';
 import { Config } from 'src/common/config';
 
 export enum QueueNames {
-  Mail = 'Mail',
+  Notifications = 'Notifications',
+}
+export enum QueueEvents {
+  SendEmail = 'SendEmail',
 }
 
 export const getRabbitMqOptions = (

@@ -31,6 +31,7 @@ services:
       - RABBIT_USER=editor
       - RABBIT_PASS
       - CLIENT_URL=http://localhost:3000
+      - CODE_EXPIRES_MIN
     volumes:
       - ../../services/core:/app
       - ../../data/shortvideos/files/:/data/files

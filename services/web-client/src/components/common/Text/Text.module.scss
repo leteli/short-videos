@@ -1,0 +1,40 @@
+@use "../../../utils/styles/typography.scss";
+
+.basicText {
+  color: var(--text-primary);
+}
+
+.h1 {
+  font-size: typography.$text-size-h1;
+  line-height: typography.$line-height-medium;
+  font-weight: typography.$font-weight-semi-bold;
+}
+
+.h2 {
+  font-size: typography.$text-size-large;
+  line-height: typography.$line-height-small;
+  font-weight: typography.$font-weight-semi-bold;
+}
+
+.title {
+  font-size: typography.$text-size-md-lg;
+  line-height: typography.$line-height-small;
+  font-weight: typography.$font-weight-semi-bold;
+}
+
+.lgText {
+  font-size: typography.$text-size-medium-2;
+  line-height: typography.$line-height-sm-md;
+  font-weight: typography.$font-weight-semi-bold;
+}
+
+.text {
+  font-size: typography.$text-size-medium;
+  font-weight: typography.$font-weight-regular;
+  line-height: typography.$line-height-small;
+}
+
+.caption {
+  font-size: typography.$text-size-small;
+  line-height: typography.$line-height-medium;
+}
