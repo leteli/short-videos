@@ -31,6 +31,7 @@ services:
       - RABBIT_USER
       - RABBIT_PASS
       - CLIENT_URL
+      - CODE_EXPIRES_MIN
     volumes:
       - ../../services/core:/app
       - ../../data/shortvideos/files/:/data/files

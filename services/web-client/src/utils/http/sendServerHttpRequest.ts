@@ -14,10 +14,6 @@ interface IArgs<T> {
   signal?: AbortSignal;
 }
 
-export interface IHandledError {
-  errorMessage: string;
-}
-
 export const sendServerHttpRequest = async <T, R>(
   args: IArgs<T>
 ): Promise<AxiosResponse<R> | undefined> => {

@@ -1,5 +1,6 @@
 import { Module } from '@nestjs/common';
 import { ConfigModule } from '@nestjs/config';
+import { EmailModule } from './modules/email.module';
 import config from 'src/common/config';
 
 @Module({
@@ -8,6 +9,7 @@ import config from 'src/common/config';
       load: [config],
       isGlobal: true,
     }),
+    EmailModule,
   ],
 })
 export class AppModule {}

@@ -12,10 +12,6 @@ interface IArgs<T> {
   withCredentials?: boolean;
 }
 
-export interface IApiError {
-  message: string;
-}
-
 export const sendHttpRequest = async <T, R>(
   args: IArgs<T>
 ): Promise<AxiosResponse<R> | undefined> => {

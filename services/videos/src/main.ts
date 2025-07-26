@@ -1,7 +1,7 @@
 import { NestFactory } from '@nestjs/core';
 import { MicroserviceOptions, AsyncOptions } from '@nestjs/microservices';
 import { ConfigService } from '@nestjs/config';
-import { AppModule } from 'src i/app.module';
+import { AppModule } from 'src/app.module';
 import { getRabbitMqOptions, QueueNames } from 'src/rabbitmq/rabbitmq.config';
 
 async function bootstrap() {

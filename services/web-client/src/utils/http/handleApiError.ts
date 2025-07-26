@@ -7,10 +7,6 @@ interface IApiError {
   message: string;
 }
 
-export interface IHandledError {
-  message: string;
-}
-
 export const parseAxiosError = ({ response }: AxiosError<IApiError>) => {
   return response ? response.data.message : COMMON_ERROR_TEXT;
 }
