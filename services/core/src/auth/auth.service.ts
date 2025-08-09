@@ -1,6 +1,6 @@
-import { ConflictException, Injectable } from '@nestjs/common';
+import { Injectable, ConflictException } from '@nestjs/common';
 import { UsersService } from 'src/users/users.service';
-import { SignupDto } from './auth.dto';
+import { LoginDto, SignupDto } from './auth.dto';
 import { JwtService } from '@nestjs/jwt';
 import { milliseconds } from 'date-fns';
 import { IBasicUserDto } from 'src/users/users.model';
@@ -89,5 +89,16 @@ export class AuthService {
       secure: !isLocal,
       signed: true,
     });
+  }
+  async login(payload: LoginDto) {
+    const user = await this.usersService.findUser({
+      username: payload.username,
+    });
+    if (!user || !(await user.isPasswordValid(payload.password))) {
+      throw new UnauthorizedException(ApiErrors.InvalidCredentials);
+    }
+    const { id, username } = user.toDto();
+    const token = await this.generateJwtToken<IBasicUserDto>({ id, username });
+    return { id, username, token };
   }
 }

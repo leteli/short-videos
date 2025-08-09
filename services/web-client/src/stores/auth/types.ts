@@ -30,3 +30,17 @@ export interface IAuthStore {
 export interface IVerifyUsername {
     username: string;
 }
+
+export interface ILoginRequest {
+    username: string;
+    password: string;
+}
+
+export interface ILoginResponse {
+    id: string;
+    username: string;
+}
+
+export interface IAuthSearchParams {
+  searchParams: Promise<IUser>;
+}

@@ -25,3 +25,11 @@ export class ConfirmSignupDto {
   @IsEmail({}, { message: IValidationErrors.EmailNotValid })
   email: string;
 }
+
+export class LoginDto {
+  @IsNotEmpty({ message: IValidationErrors.UsernameRequired })
+  username: string;
+
+  @IsNotEmpty({ message: IValidationErrors.PasswordRequired })
+  password: string;
+}

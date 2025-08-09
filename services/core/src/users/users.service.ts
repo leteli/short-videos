@@ -1,7 +1,7 @@
 import { Injectable, ConflictException } from '@nestjs/common';
 import { InjectModel } from '@nestjs/mongoose';
 import { Model } from 'mongoose';
-import { User, IUser } from './users.model';
+import { User, IUser, UserDocument } from './users.model';
 import { SignupDto } from 'src/auth/auth.dto';
 import { ApiErrors } from 'src/common/constants/errors.constants';
 
@@ -16,7 +16,7 @@ export class UsersService {
     const newUser = new this.userModel(createUserDto);
     return newUser.save();
   }
-  async findUserById(id: string) {
+  async findUserById(id: string): Promise<UserDocument | null> {
     return this.userModel.findById(id);
   }
 

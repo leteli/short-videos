@@ -8,7 +8,6 @@ export const API_SIGNUP = `${API_AUTH}/signup`;
 export const API_SIGNUP_CONFIRM = `${API_SIGNUP}/confirm`
 
 export const API_LOGIN = `${API_AUTH}/login`;
-export const API_VERIFY_TOKEN = `${API_AUTH}/verify`;
 
 // users
 const API_USERS = `${API_VERSION}/users`;
@@ -20,3 +19,5 @@ export enum HttpRequestMethods {
     Post = 'post',
     Put = 'put',
 }
+
+export const AUTH_COOKIE_KEY = 'auth';
