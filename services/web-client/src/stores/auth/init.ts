@@ -1,9 +1,4 @@
-import { signUpFx, confirmSignupFx, $authStore } from "@/stores/auth/model";
-import { handleSignup } from "./handlers/handleSignup";
-import { handleConfirmSignup } from "./handlers/handleConfirmSignup";
-
-signUpFx.use(handleSignup);
-confirmSignupFx.use(handleConfirmSignup);
+import { confirmSignupFx, loginFx, $authStore, logoutFx } from "@/stores/auth/model";
 
 $authStore.on(confirmSignupFx.doneData, (state, payload) => {
   if (!payload) {
@@ -11,3 +6,12 @@ $authStore.on(confirmSignupFx.doneData, (state, payload) => {
   }
   return { user: payload };
 });
+
+$authStore.on(loginFx.doneData, (state, payload) => {
+  if (!payload) {
+    return state;
+  }
+  return { user: payload };
+});
+
+$authStore.on(logoutFx.done, () => ({ user: null }));

@@ -1,0 +1,11 @@
+@use '../../../utils/styles/rem.scss' as *;
+
+.container {
+    display: flex;
+    align-items: center;
+    justify-content: flex-end;
+    height: rem(64px);
+    width: 100vw;
+    background: var(--surface-secondary);
+    padding: rem(14px 24px);
+}

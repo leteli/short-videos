@@ -1,5 +1,5 @@
 import { Schema, SchemaFactory, Prop } from '@nestjs/mongoose';
-import * as bcrypt from 'bcryptjs';
+import { compare, hash } from 'bcryptjs';
 import { Document, Types } from 'mongoose';
 
 export interface IUser {
@@ -37,7 +37,7 @@ export class User {
   @Prop({ required: true, unique: true })
   username: string;
 
-  @Prop({ required: true, select: false })
+  @Prop({ required: true })
   password: string;
 
   toDto(): IUserDto {
@@ -46,6 +46,9 @@ export class User {
       username: this.username,
       email: this.email,
     };
+  }
+  async isPasswordValid(password: string) {
+    return compare(password, this.password);
   }
 }
 
@@ -57,7 +60,7 @@ UserSchema.pre('save', async function () {
   }
   const saltRounds = 6;
   try {
-    const hashed = await bcrypt.hash(this.password, saltRounds);
+    const hashed = await hash(this.password, saltRounds);
     this.password = hashed;
   } catch (err) {
     console.error(err);
