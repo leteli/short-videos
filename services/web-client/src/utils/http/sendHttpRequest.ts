@@ -14,7 +14,7 @@ interface IArgs<T> {
 
 export const sendHttpRequest = async <T, R>(
   args: IArgs<T>
-): Promise<AxiosResponse<R> | undefined> => {
+): Promise<AxiosResponse<R>> => {
   const { url, method, data, params, headers = {}, cancelToken, signal, withCredentials = true } = args;
 
   try {

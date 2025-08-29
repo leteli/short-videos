@@ -29,5 +29,6 @@ import { QueuePublisherModule } from 'src/queue-publisher/queue-publisher.module
   ],
   controllers: [AuthController],
   providers: [AuthService],
+  exports: [AuthService],
 })
 export class AuthModule {}

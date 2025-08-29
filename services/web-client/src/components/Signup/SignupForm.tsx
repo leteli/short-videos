@@ -3,8 +3,8 @@ import { useCallback, useState } from "react";
 import { useRouter } from "next/navigation";
 import { useUnit } from "effector-react";
 import { useForm, useWatch } from "react-hook-form";
-import { useBool } from "../hooks/useBool";
-import { useDebounce } from "../hooks/useDebounce";
+import { useBool } from "@/hooks/useBool";
+import { useDebounce } from "@/hooks/useDebounce";
 import { Text, Variants, Tags } from "../common/Text/Text";
 import { ControlledInput, InputVariant } from "../common/Input/Input";
 import { PasswordInput, PasswordPurpose } from "../common/Input/PasswordInput";
@@ -14,10 +14,12 @@ import { signUpFx, confirmSignupFx } from "@/stores";
 import { CHATS_ROUTE } from "@/constants/clientRoutes";
 import { ConfirmCodeForm } from "../ConfirmCodeForm/ConfirmCodeForm";
 
-import styles from "./SignupForm.module.scss";
 import { getAxiosErrorMessage } from "@/utils/http/handleApiError";
 import { ApiErrors } from "@/constants/errors";
-import { handleVerifyUsername } from "@/stores/auth/handlers/handleVerifyUsername";
+import { handleVerifyUsername } from "@/stores/users/handlers/handleVerifyUsername";
+import { USERNAME_MIN } from "@/constants/common";
+
+import styles from "./Signup.module.scss";
 
 interface ISignupFormValues {
   email: string;
@@ -66,6 +68,9 @@ export const SignupForm = () => {
     async () => {
       try {
         clearErrors("username");
+        if (username.length <= USERNAME_MIN) {
+          return;
+        }
         await handleVerifyUsername({ username });
       } catch (err) {
         if (getAxiosErrorMessage(err) === ApiErrors.UsernameAlreadyExists) {
@@ -135,7 +140,7 @@ export const SignupForm = () => {
   }
 
   return (
-    <form onSubmit={handleSubmit(handleSignup)} className={styles.container}>
+    <form onSubmit={handleSubmit(handleSignup)} className={styles.form}>
       <Text variant={Variants.h1} tag={Tags.h1}>
         Sign up
       </Text>

@@ -2,17 +2,24 @@
 
 .page {
   display: flex;
-  align-items: center;
-  justify-content: center;
-  min-height: 100svh;
-  padding: rem(0 20px 0px);
+  align-items: stretch;
+  min-height: 100dvh;
   background: var(--surface-primary);
 
   .main {
     display: flex;
     flex-direction: column;
-    flex-grow: 1;
-    width: 100%;
+    flex: 1;
+    justify-content: center;
     align-items: center;
+    width: 100vw;
+  }
+  .authPage {
+    padding-inline: rem(20px);
+  }
+  .chatsWrapper {
+    display: flex;
+    flex: 1;
+    width: 100%;
   }
 }

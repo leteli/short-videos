@@ -1,8 +1,13 @@
 "use server";
+import { cookies } from "next/headers";
 import axios, { Method, CancelToken, AxiosResponse } from "axios";
 import {
   getAxiosErrorMessage,
+  getAxiosErrorStatusCode,
 } from "./handleApiError";
+import { AUTH_COOKIE_KEY } from "@/constants/http";
+import { handleLogout } from "@/stores/auth/handlers/handleLogout";
+
 
 interface IArgs<T> {
   method: Method;
@@ -16,8 +21,10 @@ interface IArgs<T> {
 
 export const sendServerHttpRequest = async <T, R>(
   args: IArgs<T>
-): Promise<AxiosResponse<R> | undefined> => {
+): Promise<AxiosResponse<R>> => {
   const { url, method, data, params, headers = {}, cancelToken, signal } = args;
+
+  const token = (await cookies()).get(AUTH_COOKIE_KEY)?.value;
 
   try {
     const result = await axios({
@@ -25,7 +32,10 @@ export const sendServerHttpRequest = async <T, R>(
       method,
       data,
       params,
-      headers,
+      headers: {
+        ...headers,
+        Cookie: `${AUTH_COOKIE_KEY}=${token}`,
+      },
       cancelToken,
       signal,
       withCredentials: true,
@@ -33,6 +43,10 @@ export const sendServerHttpRequest = async <T, R>(
     return result;
   } catch (err) {
     console.error("[HttpServerRequestError]", err);
+    const statusCode = getAxiosErrorStatusCode(err);
+    if (statusCode && statusCode === 401) {
+      handleLogout()
+    }
     const errorMessage = getAxiosErrorMessage(err);
     throw new Error(errorMessage);
   }
