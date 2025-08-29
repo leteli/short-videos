@@ -1,0 +1,33 @@
+@use "../../../utils/styles/typography.scss";
+@use "../../../utils/styles/rem.scss" as *;
+
+.container {
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  align-self: stretch;
+}
+
+.select {
+  position: relative;
+  height: rem(56px);
+  max-width: calc(100vw - 20px);
+  border-radius: rem(100px);
+  border: rem(3px) solid var(--border-accent) !important;
+  background: var(--white-03);
+}
+
+.floatingLabel {
+  position: absolute;
+  top: rem(-7px);
+  left: rem(14px);
+  background: var(--surface-primary);
+  border-radius: rem(100px);
+  backdrop-filter: blur(5px);
+  padding: 0 rem(4px);
+  font-size: typography.$text-size-small;
+  line-height: typography.$line-height-medium;
+  color: var(--text-tertiary);
+  pointer-events: none;
+  z-index: 1;
+}

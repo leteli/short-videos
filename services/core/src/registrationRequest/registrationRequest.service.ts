@@ -52,8 +52,15 @@ export class RegistrationRequestService {
     email,
   }: Pick<IRegistrationRequest, 'code' | 'email'>) {
     const request = await this.getRegistrationRequest({ email });
+    if (!request) {
+      throw new UnauthorizedException(ApiErrors.InvalidCode);
+    }
+    const mockEmailCode = this.configService.get<boolean>('mockEmailCode');
+    if (mockEmailCode && code === ''.padStart(CONFIRM_CODE_LENGTH, '0')) {
+      return request;
+    }
     const isValid = await request?.isValid(code);
-    if (!request || !isValid) {
+    if (!isValid) {
       throw new UnauthorizedException(ApiErrors.InvalidCode);
     }
     return request;

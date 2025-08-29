@@ -21,6 +21,7 @@ const getConfig = () => ({
     jwtTokenSecret: parseString(process.env.JWT_TOKEN_SECRET, 'localJwtSecret'),
     jwtTokenExpiresInDays: parseNumber(process.env.JWT_TOKEN_EXPIRES_DAYS, 7),
   },
+  mockEmailCode: parseBoolean(process.env.MOCK_EMAIL_CODE, false),
 });
 
 export type Config = ReturnType<typeof getConfig>;
