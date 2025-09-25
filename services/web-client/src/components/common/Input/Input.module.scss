@@ -1,0 +1,79 @@
+@use "../../../utils/styles/typography.scss";
+@use "../../../utils/styles/rem.scss" as *;
+
+.container {
+  display: flex;
+  flex-direction: column;
+  position: relative;
+  gap: rem(4px);
+  &.large {
+    width: rem(384px);
+    max-width: 100%;
+
+    .input {
+      font-family: inherit;
+      height: rem(56px);
+    }
+    .textarea {
+      font-family: inherit;
+      height: rem(141px);
+      &::-webkit-scrollbar {
+        display: none;
+      }
+    }
+  }
+
+  .counter {
+    display: flex;
+    position: absolute;
+    right: rem(18px);
+    bottom: rem(18px);
+    color: var(--text-secondary);
+    &.couterError {
+      color: var(--destructive);
+    }
+  }
+
+  .formField {
+    display: flex;
+    align-items: center;
+    width: 100%;
+    padding: rem(14px) rem(18px);
+    border: none;
+    background: var(--white-03);
+    color: var(--text-primary);
+    font-size: typography.$text-size-medium;
+    line-height: typography.$line-height-small;
+    outline: none;
+    &.error {
+      border: rem(3px) solid var(--destructive);
+      outline: none;
+    }
+  }
+  .input {
+    @extend .formField;
+    border-radius: rem(100px);
+  }
+  .textarea {
+    @extend .formField;
+    border-radius: rem(28px);
+    resize: none;
+  }
+  .errorText {
+    padding-left: rem(8px);
+    color: var(--destructive);
+  }
+  .floatingLabel {
+    position: absolute;
+    top: rem(-7px);
+    left: rem(14px);
+    background: var(--surface-primary);
+    border-radius: rem(100px);
+    backdrop-filter: blur(5px);
+    padding: 0 rem(4px);
+    font-size: typography.$text-size-small;
+    line-height: typography.$line-height-medium;
+    color: var(--text-tertiary);
+    pointer-events: none;
+  }
+}

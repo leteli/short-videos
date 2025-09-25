@@ -1,0 +1,30 @@
+@use "../../utils/styles/rem.scss" as *;
+
+.container {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  gap: rem(32px);
+  width: rem(300px);
+  max-width: 90%;
+
+  .texts {
+    display: flex;
+    flex-direction: column;
+    gap: rem(8px);
+    text-align: center;
+    .caption {
+      color: var(--text-secondary)
+    }
+  }
+
+  .input {
+    font-size: rem(30px);
+    padding: rem(16px 30px);
+    width: 10ch;
+  }
+  .resendLabel {
+    cursor: pointer;
+  }
+}

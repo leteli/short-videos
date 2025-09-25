@@ -1,0 +1,6 @@
+@use "../../../utils/styles/typography.scss";
+
+.container {
+    color: var(--text-secondary);
+    font-size: typography.$text-size-medium;
+}

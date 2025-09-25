@@ -1,0 +1,58 @@
+@use "../../utils/styles/rem.scss" as *;
+
+.container {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    gap: rem(32px);
+    inline-size: min(100%, rem(500px));
+    block-size: min(90vh, rem(500px));
+    @supports (block-size: 90dvh) {
+        block-size: min(90dvh, rem(500px));
+    }
+    padding-block: clamp(rem(20px), rem(30px), rem(40px));
+    padding-inline: clamp(rem(16px), rem(18px), rem(20px));
+    background: var(--white-03);
+    border-radius: rem(24px);
+    overflow: auto;
+
+    .signup {
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        gap: rem(8px);
+        .linkText {
+            cursor: pointer;
+            color: var(--text-tertiary);
+            font-weight: 500;
+        }
+    }
+    .caption {
+        color: var(--text-secondary);
+    }
+    .form {
+        display: flex;
+        flex-direction: column;
+        gap: rem(24px);
+        justify-content: center;
+        align-items: center;
+        width: 100%;
+        .wrapper {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            width: 100%;
+            gap: rem(4px);
+        }
+        .inputsBlock {
+            display: flex;
+            flex-direction: column;
+            gap: rem(24px);
+        }
+        .errorText {
+            color: var(--destructive);
+            padding-left: rem(4px);
+        }
+    }
+}

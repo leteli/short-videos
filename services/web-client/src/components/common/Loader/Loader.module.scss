@@ -1,0 +1,25 @@
+@use "../../../utils/styles/rem.scss" as *;
+
+.loader {
+  border: rem(2px) solid var(--text-primary);
+  border-top: rem(2px) solid transparent;
+  border-radius: 50%;
+  animation: spin 1s linear infinite;
+  &.small {
+    width: rem(20px);
+    height: rem(20px);
+  }
+  &.large {
+    width: rem(60px);
+    height: rem(60px);
+  }
+}
+
+@keyframes spin {
+  0% {
+    transform: rotate(0deg);
+  }
+  100% {
+    transform: rotate(360deg);
+  }
+}
