@@ -1,11 +1,17 @@
 import { useState, useEffect } from "react";
 import { useUnit } from "effector-react";
-import { Options } from 'react-select';
 import { Text, Variants } from "../common/Text/Text";
 import { Option, Select } from "../common/Select/Select";
+import { Loader } from "../common/Loader/Loader";
 import { useDebounce } from "@/hooks/useDebounce";
-import { searchUsersFx } from "@/stores";
-import { PAGE_DEFAULT, USERNAME_MIN } from "@/constants/common";
+import {
+  searchUsersFx,
+  $matchedUsersStore,
+  changeQueryEvent,
+  loadNextUsersPage,
+} from "@/stores";
+import { SEARCH_QUERY_MAX } from "@/constants/common";
+import { FetchItemshModes } from "@/constants/http";
 import styles from "./UsersSearch.module.scss";
 
 interface IProps {
@@ -15,50 +21,48 @@ interface IProps {
   error: string | null;
 }
 const DEFAULT_SELECT_NAME = "users_search";
+const SEARCH_DEBOUNCE_MS = 300;
 
 export const UsersSearch = ({ onSelect, selectId, error }: IProps) => {
-  const [options, setOptions] = useState<Options<{ value: string, label: string }>>([]);
-  const { searchUsers, searchUsersPending } = useUnit({
+  const {
+    usersStore,
+    searchUsers,
+    searchUsersPending,
+    changeQuery,
+    loadNextPage,
+  } = useUnit({
+    usersStore: $matchedUsersStore,
     searchUsers: searchUsersFx,
     searchUsersPending: searchUsersFx.pending,
+    changeQuery: changeQueryEvent,
+    loadNextPage: loadNextUsersPage,
   });
-  const [searchQuery, setSearchQuery] = useState<string>('')
-  const [page, setPage] = useState(PAGE_DEFAULT);
-
-  const loadUsers = async (searchQuery?: string) => {
-  if (typeof searchQuery == 'string' && (!searchQuery?.trim() || searchQuery?.trim().length < USERNAME_MIN)) {
-    return [];
-  }
-  try {
-    const result = await searchUsers({ ...(searchQuery && { searchQuery }), page });
-    const userOptions = result.users.map(({ id, username }) => ({ value: id, label: username }));
-    setOptions(userOptions);
-  } catch (err) {
-    console.error(err);
-    return [];
-  }
-  };
-  
+  const [searchQuery, setSearchQuery] = useState<string>("");
   const { cancel } = useDebounce(
-    () => loadUsers(searchQuery),
-    300,
-    [searchQuery, page]
+    () => {
+      if (searchQuery.length > SEARCH_QUERY_MAX) {
+        console.error("Search query exceeds max word length");
+        return;
+      }
+      changeQuery(searchQuery);
+    },
+    SEARCH_DEBOUNCE_MS,
+    [searchQuery, changeQuery]
   );
 
   useEffect(() => {
-    loadUsers();
-  }, []);
-
-  useEffect(() => {
+    searchUsers({ mode: FetchItemshModes.replace });
     return () => cancel();
-  }, [])
+  }, [searchUsers, cancel]);
 
   return (
     <div className={styles.container}>
       <Select
         id={selectId ?? DEFAULT_SELECT_NAME}
-        options={options}
-        defaultValue={options[0]}
+        options={usersStore.users.map(({ id, username }) => ({
+          value: id,
+          label: username,
+        }))}
         labelText="Add participants"
         isLoading={searchUsersPending}
         onInputChange={(value) => setSearchQuery(value)}
@@ -69,17 +73,31 @@ export const UsersSearch = ({ onSelect, selectId, error }: IProps) => {
           }
         }}
         onMenuScrollToBottom={() => {
-        if (!searchUsersPending) {
-          setPage((page) => page + 1);
-        }
+          if (!searchUsersPending && usersStore.hasMore) {
+            loadNextPage();
+          }
+        }}
+        noOptionsMessage={() => {
+          if (searchUsersPending) {
+            return (
+              <div className={styles.loaderWrapper}>
+                <Loader />
+              </div>
+            );
+          }
+          return <Text>No users found</Text>;
         }}
         placeholder="Search by username"
         closeMenuOnSelect
         blurInputOnSelect
-        noOptionsMessage={() => <Text>No users found</Text>}
+        filterOption={null}
         withError={!!error}
       />
-      {error && <Text variant={Variants.caption} className={styles.errorText}>{error}</Text>}
-      </div>
+      {error && (
+        <Text variant={Variants.caption} className={styles.errorText}>
+          {error}
+        </Text>
+      )}
+    </div>
   );
 };

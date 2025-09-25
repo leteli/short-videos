@@ -6,6 +6,7 @@
     flex: 1;
     justify-content: space-between;
     padding-block: clamp(rem(16px), rem(20px), rem(24px));
+    max-height: 100%;
     &.noChatWrapper {
         justify-content: center;
         align-items: center;

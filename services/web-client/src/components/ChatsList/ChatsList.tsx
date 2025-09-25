@@ -1,21 +1,32 @@
 "use client";
 import { useUnit } from "effector-react";
-import { $chatsStore, $chatStore, getChatsFx, openChatEvent } from "@/stores";
+import useInfiniteScroll from "react-infinite-scroll-hook";
+import { $chatsStore, $chatStore, getChatsFx, openChatEvent, loadNextChatsPage } from "@/stores";
 import { useBool } from "@/hooks/useBool";
 import { Text, Variants, Tags } from "../common/Text/Text";
-import { Loader } from "../common/Loader/Loader";
+import { Loader, LoaderSizes } from "../common/Loader/Loader";
 import { Button, ButtonSize, ButtonVariant } from "../common/Button/Button";
 import styles from "./ChatsList.module.scss";
 import { AddChatModal } from "../modals/AddChatModal";
 
 export const ChatsList = () => {
-  const { chatsStore, getChatsPending, openChat } = useUnit({
+  const { chatsStore, getChatsPending, openChat, loadNextPage } = useUnit({
     chatsStore: $chatsStore,
     chatStore: $chatStore,
     getChatsPending: getChatsFx.pending,
     openChat: openChatEvent,
+    loadNextPage: loadNextChatsPage,
   });
   const addChatModal = useBool();
+
+  const [infiniteRef, { rootRef }] = useInfiniteScroll({
+    loading: getChatsPending,
+    hasNextPage: Boolean(chatsStore.hasMore),
+    onLoadMore: loadNextPage,
+    disabled: getChatsPending || !chatsStore.hasMore || !chatsStore.cursor,
+    rootMargin: "0px 0px 100px 0px",
+    delayInMs: 500,
+  });
 
   return (
     <div className={styles.container}>
@@ -30,7 +41,7 @@ export const ChatsList = () => {
           onClick={addChatModal.onTrue}
         />
       </div>
-      <div className={styles.chatsList}>
+      <div className={styles.chatsList} ref={rootRef}>
         {getChatsPending && !chatsStore.chats.length && <Loader />}
         {!getChatsPending && chatsStore.chats.length === 0 && (
           <div className={styles.emptyWrapper}>
@@ -47,8 +58,16 @@ export const ChatsList = () => {
             {chat.type === "group" && <Text>{chat.title || "Group Chat"}</Text>}
           </div>
         ))}
+        {chatsStore.hasMore && (
+          <div ref={infiniteRef} className={styles.loaderWrapper}>
+            <Loader size={LoaderSizes.small} />
+          </div>
+        )}
       </div>
-      <AddChatModal isOpen={addChatModal.value} onClose={addChatModal.onFalse}/>
+      <AddChatModal
+        isOpen={addChatModal.value}
+        onClose={addChatModal.onFalse}
+      />
     </div>
   );
 };

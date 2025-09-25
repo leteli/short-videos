@@ -8,12 +8,14 @@ import { Header } from "@/components/common/Header/Header";
 import { ChatsList } from "@/components/ChatsList/ChatsList";
 import { Chat } from "@/components/Chat/Chat";
 import styles from "@/app/page.module.scss";
+import { FetchItemshModes } from "@/constants/http";
 
 export default async function ChatsPage({ searchParams }: IAuthSearchParams) {
   const user = await searchParams;
   const scope = fork();
-  await allSettled(getChatsFx, { scope, params: {} })
   await allSettled(setAuth, { scope, params: { user } });
+  await allSettled(getChatsFx, { scope, params: { mode: FetchItemshModes.replace, serverSide: true } });
+
   const values = serialize(scope);
   return (
     <EffectorNext values={values}>

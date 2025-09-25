@@ -7,10 +7,8 @@ import { Text } from "../common/Text/Text";
 import styles from "./Chat.module.scss";
 import { ChatTypes } from "@/stores/chats/types";
 
-// TODO: implement group chat UI
 export const Chat = () => {
   const { chat } = useUnit($chatStore);
-  console.log('Selected chat:', chat);
   if (!chat) {
     <div className={clsx(styles.container, styles.noChatWrapper)}>
       <div className={styles.textLabel}>

@@ -19,9 +19,6 @@ import { UserDocument } from 'src/users/users.model';
 import { Types } from 'mongoose';
 import { ParseObjectIdPipe } from 'src/common/pipes/parse-object-id.pipe';
 import { ParseObjectIdArrayPipe } from 'src/common/pipes/parse-object-id-array.pipe';
-import { PopulatedDirectChatDocument } from './models/direct-chats.model';
-import { PopulatedGroupChatDocument } from './models/group-chat.model';
-import { ChatTypes } from './models/chats.model';
 
 @UseGuards(AuthGuard)
 @Controller('chats')
@@ -72,35 +69,13 @@ export class ChatsController {
     @Query('cursor', ParseObjectIdPipe) cursor?: Types.ObjectId,
     @Query('limit') limit?: number,
   ) {
-    const chats = await this.chatsService.findAllUserChats({
+    return this.chatsService.findAllUserChats({
       userId: req.user._id,
       cursor,
       limit,
     });
-    return {
-      chats: await Promise.all(
-        chats.map(async (chat) => {
-          if (chat.type === ChatTypes.direct) {
-            const populated = (await chat.populate<{
-              participant1: UserDocument;
-              participant2: UserDocument;
-            }>('participant1 participant2')) as PopulatedDirectChatDocument;
-
-            return populated.toDtoWithUsers({ userId: req.user._id });
-          } else if (chat.type === ChatTypes.group) {
-            const populated = (await chat.populate<{
-              participants: UserDocument[];
-            }>('participant1 participant2')) as PopulatedGroupChatDocument;
-            return populated.toDtoWithUsers({ userId: req.user._id });
-          } else {
-            return chat.toBasicDto();
-          }
-        }),
-      ),
-    };
   }
 
-  // TODO: WithChat - middleware
   @Get(':id')
   @HttpCode(HttpStatus.OK)
   getChat(@Param('id', ParseObjectIdPipe) id: Types.ObjectId) {

@@ -6,12 +6,18 @@
     flex-direction: column;
     inline-size: min(100%, rem(300px));
     border-right: rem(4px) solid var(--white-05);
+    min-block-size: 0;
+
     .header {
         display: flex;
         width: 100%;
         justify-content: space-between;
         align-items: center;
         padding: clamp(rem(12px), rem(18px), rem(24px));
+        position: sticky;
+        inset-block-start: 0;
+        background: inherit;
+        z-index: 1;
     }
     .emptyWrapper {
         display: flex;
@@ -28,6 +34,9 @@
         flex: 1;
         width: 100%;
         gap: rem(4px);
+        overflow-y: auto;
+        min-height: 0;
+        overscroll-behavior: contain;
         .listItem {
             display: flex;
             padding: rem(18px 18px 18px 32px);
@@ -38,5 +47,11 @@
                 background-color: var(--white-03);
             }
         }
+    }
+    .loaderWrapper {
+        display: flex;
+        padding: rem(8px);
+        justify-content: center;
+        align-items: center;
     }
 }

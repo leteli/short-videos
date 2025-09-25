@@ -80,13 +80,13 @@ export const ConfirmCodeForm = ({
           className: styles.input,
         }}
       />
+      <div>
       {resendDate && !canResendCode.value && (
-        <span className={styles.timerLabel}>
+        <span>
           Your Code will expire in{" "}
           <Timer
             expiryTimestamp={resendDate}
             onExpire={canResendCode.onTrue}
-            className={styles.timer}
           />
         </span>
       )}
@@ -95,6 +95,7 @@ export const ConfirmCodeForm = ({
           Resend code
         </span>
       )}
+      </div>
     </form>
   );
 };

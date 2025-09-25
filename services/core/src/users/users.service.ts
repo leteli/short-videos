@@ -7,10 +7,14 @@ import { ApiErrors } from 'src/common/constants/errors.constants';
 import { Types } from 'mongoose';
 import { escapeRegExp } from 'src/common/utils/common/regex';
 import { SearchUsersQuery } from './users.dto';
+import { Chat, ChatTypes } from 'src/chats/models/chats.model';
 
 @Injectable()
 export class UsersService {
-  constructor(@InjectModel(User.name) private userModel: Model<User>) {}
+  constructor(
+    @InjectModel(User.name) private userModel: Model<User>,
+    @InjectModel(Chat.name) private chatModel: Model<Chat>,
+  ) {}
   async createUser(createUserDto: SignupDto) {
     const user = await this.getUserExists({ email: createUserDto.email });
     if (user) {
@@ -52,11 +56,17 @@ export class UsersService {
   }: SearchUsersQuery & {
     userId: Types.ObjectId;
   }) {
+    const extraItemsCount = 1;
     const skip = (page - 1) * limit;
-    const users = await this.userModel
+    const [directChatPeers] = await this.getDirectChatPeersForUser(userId);
+
+    const usersWithExtra = await this.userModel
       .find(
         {
-          _id: { $ne: userId },
+          _id: {
+            $ne: userId,
+            ...(directChatPeers?.ids && { $nin: directChatPeers.ids }),
+          },
           ...(searchQuery && {
             usernameLower: {
               $regex: `^${escapeRegExp(searchQuery?.toLowerCase())}`,
@@ -66,11 +76,18 @@ export class UsersService {
         '_id username',
       )
       .sort({ usernameLower: 1 })
-      .collation({ locale: 'en', strength: 2 })
       .skip(skip)
-      .limit(limit)
+      .limit(limit + extraItemsCount)
       .lean();
-    return users.map(({ _id, username }) => ({ id: _id.toString(), username }));
+    const users = usersWithExtra.slice(0, limit);
+    return {
+      users: users.slice(0, limit).map(({ _id, username }) => ({
+        id: _id.toString(),
+        username,
+      })),
+      page,
+      hasMore: usersWithExtra.length > limit,
+    };
   }
   withUsernameLower(query: Partial<IUser>) {
     const { username, ...rest } = query;
@@ -79,5 +96,28 @@ export class UsersService {
       options.usernameLower = username.toLowerCase();
     }
     return options;
+  }
+  async getDirectChatPeersForUser(userId: Types.ObjectId) {
+    return this.chatModel.aggregate<{ ids: Types.ObjectId[] }>([
+      {
+        $match: {
+          type: ChatTypes.direct,
+          $or: [{ participant1: userId }, { participant2: userId }],
+        },
+      },
+      {
+        $project: {
+          _id: 0,
+          peer: {
+            $cond: {
+              if: { $eq: ['$participant1', userId] },
+              then: '$participant2',
+              else: '$participant1',
+            },
+          },
+        },
+      },
+      { $group: { _id: null, ids: { $addToSet: '$peer' } } },
+    ]);
   }
 }

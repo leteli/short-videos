@@ -35,10 +35,9 @@ export class UsersController {
     @Query() query: SearchUsersQuery,
     @Req() req: Overwrite<IRequest, { user: UserDocument }>,
   ) {
-    const users = await this.usersService.searchUsers({
+    return this.usersService.searchUsers({
       ...query,
       userId: req.user._id,
     });
-    return { users };
   }
 }

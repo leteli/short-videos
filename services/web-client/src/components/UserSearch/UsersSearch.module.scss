@@ -6,4 +6,10 @@
     color: var(--destructive) !important;
     margin-top: 0.25rem;
   }
+
+  .loaderWrapper {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+  }
 }

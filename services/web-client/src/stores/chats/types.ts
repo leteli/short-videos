@@ -1,9 +1,10 @@
+import { FetchItemshModes } from "@/constants/http";
 import { IUser } from "../users/types";
 
 export interface IChatsStore {
     chats: IChatInfo[];
     hasMore: boolean;
-    cursor?: string | null; 
+    cursor?: string; 
 }
 type IChatInfo = IDirectChatInfo | IGroupChatInfo;
 
@@ -50,13 +51,15 @@ export interface ICreateGroupChatResponse {
 }
 
 export type IGetChatsParams = {
-    cursor?: string | null;
+    cursor?: string;
     limit?: number;
     searchQuery?: string;
+    mode: FetchItemshModes;
+    serverSide?: boolean;
 };
 
 export interface IDeletChatResponse {
     id: string;
-    cursor?: string | null;
+    cursor?: string;
     hasMore: boolean; 
 }

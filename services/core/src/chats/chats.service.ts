@@ -7,9 +7,16 @@ import { InjectModel } from '@nestjs/mongoose';
 import { Model, Types } from 'mongoose';
 import { Chat, ChatTypes } from './models/chats.model';
 import { UsersService } from 'src/users/users.service';
+import { UserDocument } from 'src/users/users.model';
 import { ApiErrors } from 'src/common/constants/errors.constants';
-import { DirectChat } from './models/direct-chats.model';
-import { GroupChat } from './models/group-chat.model';
+import {
+  DirectChat,
+  PopulatedDirectChatDocument,
+} from './models/direct-chats.model';
+import {
+  GroupChat,
+  PopulatedGroupChatDocument,
+} from './models/group-chat.model';
 import {
   HAS_MORE_ITEMS_CHECK,
   LIMIT_DEFAULT,
@@ -66,7 +73,7 @@ export class ChatsService {
     });
   }
 
-  findAllUserChats({
+  async findAllUserChats({
     userId,
     cursor,
     limit = LIMIT_DEFAULT,
@@ -75,7 +82,7 @@ export class ChatsService {
     cursor?: Types.ObjectId;
     limit?: number;
   }) {
-    return this.chatModel
+    const itemsWithExtra = await this.chatModel
       .find({
         ...(cursor && { _id: { $lt: cursor } }),
         $or: [
@@ -86,13 +93,38 @@ export class ChatsService {
       })
       .sort({ updatedAt: -1 })
       .limit(limit + HAS_MORE_ITEMS_CHECK);
+    const chats = itemsWithExtra.slice(0, limit);
+    const populatedChats = await Promise.all(
+      chats.map(async (chat) => {
+        if (chat.type === ChatTypes.direct) {
+          const populated = (await chat.populate<{
+            participant1: UserDocument;
+            participant2: UserDocument;
+          }>('participant1 participant2')) as PopulatedDirectChatDocument;
+
+          return populated.toDtoWithUsers({ userId });
+        } else if (chat.type === ChatTypes.group) {
+          const populated = (await chat.populate<{
+            participants: UserDocument[];
+          }>('participant1 participant2')) as PopulatedGroupChatDocument;
+          return populated.toDtoWithUsers({ userId });
+        } else {
+          return chat.toBasicDto();
+        }
+      }),
+    );
+    return {
+      chats: populatedChats,
+      cursor: chats.at(-1)?._id?.toString(),
+      hasMore: itemsWithExtra.length > limit,
+    };
   }
 
-  findChatById(id: Types.ObjectId, select?: string) {
+  async findChatById(id: Types.ObjectId, select?: string) {
     return this.chatModel.findById(id, select).lean();
   }
 
-  removeChat(_id: Types.ObjectId) {
+  async removeChat(_id: Types.ObjectId) {
     return this.chatModel.deleteOne({ _id });
   }
 }

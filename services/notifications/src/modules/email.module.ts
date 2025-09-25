@@ -19,14 +19,16 @@ import { EmailController } from 'src/controllers/email.controller';
           transport: {
             host,
             port,
-            secure: true,
+            secure: false,
+            requireTLS: true,
+            tls: { minVersion: 'TLSv1.2', servername: host },
             auth: {
               user,
               pass,
             },
           },
           defaults: {
-            from: `"no-reply" <${user}>`,
+            from: user,
           },
         };
       },

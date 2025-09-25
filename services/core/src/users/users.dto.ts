@@ -2,14 +2,12 @@ import {
   IsString,
   Min,
   Max,
-  MinLength,
   MaxLength,
   IsInt,
   IsOptional,
 } from 'class-validator';
 import { Type, Transform } from 'class-transformer';
 import {
-  SEARCH_QUERY_MIN,
   SEARCH_QUERY_MAX,
   PAGE_DEFAULT,
   LIMIT_DEFAULT,
@@ -23,7 +21,6 @@ export class SearchUsersQuery {
     typeof value === 'string' ? value.trim() : value,
   )
   @IsString()
-  @MinLength(SEARCH_QUERY_MIN)
   @MaxLength(SEARCH_QUERY_MAX)
   searchQuery: string;
 

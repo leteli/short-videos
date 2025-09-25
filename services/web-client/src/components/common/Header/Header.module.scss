@@ -4,7 +4,8 @@
     display: flex;
     align-items: center;
     justify-content: flex-end;
-    height: rem(64px);
+    gap: rem(16px);
+    height: rem(var(----header-height));
     width: 100vw;
     background: var(--surface-secondary);
     padding: rem(14px 24px);

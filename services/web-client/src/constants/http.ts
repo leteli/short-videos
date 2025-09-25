@@ -27,3 +27,8 @@ export enum HttpRequestMethods {
 }
 
 export const AUTH_COOKIE_KEY = 'auth';
+
+export enum FetchItemshModes {
+  append = 'append',
+  replace = 'replace',
+}
