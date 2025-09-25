@@ -1,0 +1,28 @@
+@use "../../utils/styles/rem.scss" as *;
+
+.container {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  inline-size: min(100%, rem(400px));
+  block-size: min(90vh, rem(300px));
+  gap: rem(36px);
+  @supports (block-size: 90dvh) {
+    block-size: min(90dvh, rem(300px));
+  }
+  padding-block: clamp(rem(20px), rem(30px), rem(40px));
+  padding-inline: clamp(rem(16px), rem(30px), rem(40px));
+  border-radius: rem(24px);
+  border: rem(3px) solid var(--border-primary);
+  background: var(--surface-primary);
+}
+
+.overlay {
+  position: fixed;
+  inset: 0;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  background: var(--dark-50);
+}

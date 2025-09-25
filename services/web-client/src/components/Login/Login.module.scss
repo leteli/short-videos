@@ -3,21 +3,24 @@
 .container {
     display: flex;
     flex-direction: column;
-    justify-content: center;
     align-items: center;
-    height: rem(800px);
-    width: rem(500px);
-    max-height: calc(100svh - rem(40px));
-    max-width: 100%;
-    flex: 1;
-    padding: rem(32px 20px);
+    justify-content: center;
     gap: rem(32px);
-    background-color: var(--white-03);
+    inline-size: min(100%, rem(500px));
+    block-size: min(90vh, rem(500px));
+    @supports (block-size: 90dvh) {
+        block-size: min(90dvh, rem(500px));
+    }
+    padding-block: clamp(rem(20px), rem(30px), rem(40px));
+    padding-inline: clamp(rem(16px), rem(18px), rem(20px));
+    background: var(--white-03);
     border-radius: rem(24px);
+    overflow: auto;
 
     .signup {
         display: flex;
         justify-content: center;
+        align-items: center;
         gap: rem(8px);
         .linkText {
             cursor: pointer;
@@ -34,10 +37,12 @@
         gap: rem(24px);
         justify-content: center;
         align-items: center;
-        width: rem(384px);
+        width: 100%;
         .wrapper {
             display: flex;
             flex-direction: column;
+            align-items: center;
+            width: 100%;
             gap: rem(4px);
         }
         .inputsBlock {

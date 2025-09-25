@@ -1,0 +1,44 @@
+@use "../../utils/styles/rem.scss" as *;
+
+.container {
+    display: flex;
+    flex-direction: column;
+    flex: 1;
+    justify-content: space-between;
+    padding-block: clamp(rem(16px), rem(20px), rem(24px));
+    max-height: 100%;
+    &.noChatWrapper {
+        justify-content: center;
+        align-items: center;
+        .textLabel {
+            display: flex;
+            padding: rem(8px 12px);
+            border-radius: rem(12px);
+            background-color: var(--surface-secondary);
+        }
+    }
+    .header {
+        width: 100%;
+        display: flex;
+        padding: rem(12px);
+        justify-content: center;
+    }
+
+    .messagesWrapper {
+        display: flex;
+        flex-direction: column;
+        flex: 1;
+        width: 100%;
+        padding: rem(16px);
+        gap: rem(8px);
+    }
+
+    .inputWrapper {
+        width: 100%;
+        height: rem(80px);
+        display: flex;
+        gap: rem(16px);
+        align-items: center;
+        justify-content: center;
+    }
+}

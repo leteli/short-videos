@@ -20,6 +20,9 @@
     "react": "19.0.0",
     "react-dom": "19.0.0",
     "react-hook-form": "7.60.0",
+    "react-infinite-scroll-hook": "6.0.1",
+    "react-modal": "3.16.3",
+    "react-select": "5.10.2",
     "react-timer-hook": "3.0.8",
     "sass": "1.89.2",
     "socket.io-client": "4.8.1",
@@ -30,6 +33,7 @@
     "@types/node": "^20",
     "@types/react": "^19",
     "@types/react-dom": "^19",
+    "@types/react-modal": "3.16.3",
     "eslint": "^9",
     "eslint-config-next": "15.3.4",
     "typescript": "^5"

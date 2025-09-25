@@ -24,7 +24,7 @@ export class AuthService {
     private registrationRequestService: RegistrationRequestService,
   ) {}
   async requestSignup(data: SignupDto) {
-    const user = await this.usersService.findUser({ email: data.email });
+    const user = await this.usersService.getUserExists({ email: data.email });
     if (user) {
       throw new ConflictException(ApiErrors.EmailAlreadyExists);
     }

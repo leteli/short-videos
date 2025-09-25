@@ -4,6 +4,9 @@ export enum ApiErrors {
   InvalidCode = 'INVALID_CODE',
   EmailAlreadyExists = 'EMAIL_ALREADY_EXISTS',
   UsernameAlreadyExists = 'USERNAME_ALREADY_EXISTS',
+  UserNotFound = 'USER_NOT_FOUND',
+  ChatNotFound = 'CHAT_NOT_FOUND',
+  CannotAddYourselfToChat = 'CANNOT_ADD_YOURSELF_TO_CHAT',
 }
 
 export enum IValidationErrors {

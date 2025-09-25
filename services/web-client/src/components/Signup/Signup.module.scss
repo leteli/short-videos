@@ -1,0 +1,39 @@
+@use "../../utils/styles/rem.scss" as *;
+
+.container {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    gap: rem(32px);
+    inline-size: min(100%, rem(500px));
+    block-size: min(90vh, rem(700px));
+    @supports (block-size: 90dvh) {
+        block-size: min(90dvh, rem(700px));
+    }
+    padding-block: clamp(rem(20px), rem(30px), rem(40px));
+    padding-inline: clamp(rem(16px), rem(18px), rem(20px));
+    background: var(--white-03);
+    border-radius: rem(24px);
+    overflow: auto;
+    .form {
+        display: flex;
+        flex-direction: column;
+        gap: rem(24px);
+        width: 100;
+    }
+    .loginLink {
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        gap: rem(8px);
+        .caption {
+            color: var(--text-secondary);
+        }
+        .linkText {
+            cursor: pointer;
+            color: var(--text-tertiary);
+            font-weight: 500;
+        }
+    }
+}

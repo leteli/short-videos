@@ -10,8 +10,8 @@ const getConfig = () => ({
     host: parseString(process.env.RABBIT_HOST, 'rabbit:5672'),
   },
   mail: {
-    host: parseString(process.env.MAIL_HOST, 'smtp.gmail.com'),
-    port: parseNumber(process.env.MAIL_PORT, 465),
+    host: parseString(process.env.MAIL_HOST, 'smtp.mail.me.com'),
+    port: parseNumber(process.env.MAIL_PORT, 587),
     user: parseString(process.env.MAIL_USER, ''),
     pass: parseString(process.env.MAIL_PASS, ''),
   },

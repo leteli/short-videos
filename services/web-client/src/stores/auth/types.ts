@@ -1,3 +1,5 @@
+import { IUser } from "../users/types";
+
 export interface ISignupRequest {
     email: string;
     username: string;
@@ -18,17 +20,8 @@ export interface IConfirmSignupResponse {
     username: string;
 }
 
-export interface IUser {
-    id: string;
-    username: string;
-}
-
 export interface IAuthStore {
     user: IUser | null;
-}
-
-export interface IVerifyUsername {
-    username: string;
 }
 
 export interface ILoginRequest {

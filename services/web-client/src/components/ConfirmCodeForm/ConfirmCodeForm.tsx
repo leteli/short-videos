@@ -6,7 +6,7 @@ import { Tags, Text, Variants } from "../common/Text/Text";
 import { useEffect } from "react";
 import { InputVariant } from "../common/Input/Input";
 import { Timer } from "../common/Timer/Timer";
-import { IUseBool } from "../hooks/useBool";
+import { IUseBool } from "../../hooks/useBool";
 import { getAxiosErrorMessage } from "@/utils/http/handleApiError";
 import { ApiErrors } from "@/constants/errors";
 
@@ -34,6 +34,7 @@ export const ConfirmCodeForm = ({
   const {
     control,
     setError,
+    clearErrors,
   } = useForm<ICodeFormValues>({
     defaultValues: { code: "" },
   });
@@ -55,8 +56,10 @@ export const ConfirmCodeForm = ({
     };
     if (code.length === codeLength) {
       onCodeSubmit();
+    } else {
+      clearErrors('code')
     }
-  }, [code.length]);
+  }, [code.length, codeLength, handleCodeSubmit]);
 
   return (
     <form className={styles.container}>
@@ -77,13 +80,13 @@ export const ConfirmCodeForm = ({
           className: styles.input,
         }}
       />
+      <div>
       {resendDate && !canResendCode.value && (
-        <span className={styles.timerLabel}>
+        <span>
           Your Code will expire in{" "}
           <Timer
             expiryTimestamp={resendDate}
             onExpire={canResendCode.onTrue}
-            className={styles.timer}
           />
         </span>
       )}
@@ -92,6 +95,7 @@ export const ConfirmCodeForm = ({
           Resend code
         </span>
       )}
+      </div>
     </form>
   );
 };

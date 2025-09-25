@@ -1,11 +1,12 @@
 import { Schema, SchemaFactory, Prop } from '@nestjs/mongoose';
 import { compare, hash } from 'bcryptjs';
-import { Document, Types } from 'mongoose';
+import { Types, HydratedDocument } from 'mongoose';
 
 export interface IUser {
-  _id: string;
+  _id: Types.ObjectId;
   email: string;
   username: string;
+  usernameLower: string;
 }
 
 export interface IBasicUserDto {
@@ -21,7 +22,7 @@ export enum DtoFormats {
   full = 'full',
 }
 
-export type UserDocument = User & Document<Types.ObjectId>;
+export type UserDocument = HydratedDocument<User>;
 
 @Schema({
   timestamps: true,
@@ -30,19 +31,30 @@ export type UserDocument = User & Document<Types.ObjectId>;
   versionKey: false,
 })
 export class User {
-  _id: string;
+  _id: Types.ObjectId;
+
   @Prop({ required: true })
   email: string;
 
   @Prop({ required: true, unique: true })
   username: string;
 
+  @Prop()
+  usernameLower: string;
+
   @Prop({ required: true })
   password: string;
 
+  toBasicDto(): IBasicUserDto {
+    return {
+      id: this._id.toString(),
+      username: this.username,
+    };
+  }
+
   toDto(): IUserDto {
     return {
-      id: this._id,
+      id: this._id.toString(),
       username: this.username,
       email: this.email,
     };
@@ -55,6 +67,9 @@ export class User {
 export const UserSchema = SchemaFactory.createForClass(User);
 
 UserSchema.pre('save', async function () {
+  if (this.isModified('username')) {
+    this.usernameLower = this.username.toLowerCase();
+  }
   if (!this.isModified('password')) {
     return;
   }
@@ -69,3 +84,4 @@ UserSchema.pre('save', async function () {
 });
 
 UserSchema.loadClass(User);
+UserSchema.index({ usernameLower: 1 });

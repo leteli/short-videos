@@ -4,6 +4,8 @@ import { MongooseModule } from '@nestjs/mongoose';
 import { AuthModule } from './auth/auth.module';
 import { UsersModule } from './users/users.module';
 import { QueuePublisherModule } from './queue-publisher/queue-publisher.module';
+import { ChatsModule } from './chats/chats.module';
+import { SecurityModule } from './security/security.module';
 import config from 'src/common/config';
 
 @Module({
@@ -23,6 +25,8 @@ import config from 'src/common/config';
     AuthModule,
     UsersModule,
     QueuePublisherModule,
+    ChatsModule,
+    SecurityModule,
   ],
 })
 export class AppModule {}

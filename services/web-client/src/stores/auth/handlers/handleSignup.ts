@@ -9,10 +9,7 @@ export const handleSignup = async (data: ISignupRequest) => {
       method: HttpRequestMethods.Post,
       data,
     });
-    if (!result?.data?.expiresAt) {
-      throw new Error();
-    }
-    return result?.data;
+    return result.data;
   } catch (err) {
     console.error(err);
     throw err;

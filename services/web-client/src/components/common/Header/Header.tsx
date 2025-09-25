@@ -1,13 +1,15 @@
 "use client"
 import { useUnit } from "effector-react";
-import { logoutFx } from "@/stores";
+import { $authStore, logoutFx } from "@/stores";
+import { Text } from "../Text/Text";
 import { Button, ButtonSize, ButtonVariant } from "../Button/Button";
 import styles from "./Header.module.scss";
 
 export const Header = () => {
-  const logout = useUnit(logoutFx);
+  const { authStore, logout } = useUnit({ authStore: $authStore, logout: logoutFx });
   return (
     <div className={styles.container}>
+      <Text>{authStore.user?.username}</Text>
       <Button
         text="Sign out"
         variant={ButtonVariant.secondary}
