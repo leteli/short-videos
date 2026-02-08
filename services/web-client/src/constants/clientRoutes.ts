@@ -1,3 +1,4 @@
 export const LOGIN_ROUTE = '/login';
 export const SIGNUP_ROUTE = '/signup';
 export const CHATS_ROUTE = '/chats';
+export const MESSAGES_ROUTE = '/messages';

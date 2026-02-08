@@ -1,7 +1,7 @@
 import { NextRequest, NextResponse } from "next/server";
 import { cookies } from "next/headers";
 import { sendServerHttpRequest } from "./utils/http/sendServerHttpRequest";
-import { AUTH_COOKIE_KEY, HttpRequestMethods } from "./constants/http";
+import { AUTH_COOKIE_KEY, AUTH_TOKEN_HEADER, HttpRequestMethods } from "./constants/http";
 import { API_VERIFY_TOKEN } from "./constants/serverHttp";
 import { LOGIN_ROUTE } from "./constants/clientRoutes";
 
@@ -40,9 +40,11 @@ export async function middleware(req: NextRequest) {
     }
 
     const searchParams = new URLSearchParams(result.data);
+    const headers = new Headers(req.headers);
+    headers.set(AUTH_TOKEN_HEADER, result.headers[AUTH_TOKEN_HEADER]);
 
     const url = new URL(`${pathname}?${searchParams}`, req.nextUrl);
-    return NextResponse.rewrite(url);
+    return NextResponse.rewrite(url, { request: { headers }});
   } catch (error: unknown) {
     console.error(
       `[middleware] Error at path ${req.nextUrl.pathname}: ${error}`

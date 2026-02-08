@@ -7,6 +7,7 @@ import { UsersModule } from 'src/users/users.module';
 import { DirectChat, DirectChatSchema } from './models/direct-chats.model';
 import { GroupChat, GroupChatSchema } from './models/group-chat.model';
 import { ChatTypes } from './models/chats.model';
+import { ChatAccessGuard } from './chat.guard';
 
 @Module({
   imports: [
@@ -31,6 +32,7 @@ import { ChatTypes } from './models/chats.model';
     UsersModule,
   ],
   controllers: [ChatsController],
-  providers: [ChatsService],
+  providers: [ChatsService, ChatAccessGuard],
+  exports: [ChatsService, ChatAccessGuard],
 })
 export class ChatsModule {}

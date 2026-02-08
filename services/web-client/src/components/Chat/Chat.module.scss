@@ -3,10 +3,10 @@
 .container {
     display: flex;
     flex-direction: column;
-    flex: 1;
     justify-content: space-between;
     padding-block: clamp(rem(16px), rem(20px), rem(24px));
-    max-height: 100%;
+    min-height: 0;
+    flex: 1 1 auto;
     &.noChatWrapper {
         justify-content: center;
         align-items: center;
@@ -40,5 +40,6 @@
         gap: rem(16px);
         align-items: center;
         justify-content: center;
+        flex: 0 0 auto;
     }
 }

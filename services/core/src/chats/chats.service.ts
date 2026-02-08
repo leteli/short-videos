@@ -93,7 +93,9 @@ export class ChatsService {
       })
       .sort({ updatedAt: -1 })
       .limit(limit + HAS_MORE_ITEMS_CHECK);
+
     const chats = itemsWithExtra.slice(0, limit);
+
     const populatedChats = await Promise.all(
       chats.map(async (chat) => {
         if (chat.type === ChatTypes.direct) {
@@ -120,11 +122,29 @@ export class ChatsService {
     };
   }
 
-  async findChatById(id: Types.ObjectId, select?: string) {
-    return this.chatModel.findById(id, select).lean();
+  async findChatById(id: Types.ObjectId | string, select?: string) {
+    return this.chatModel.findById(id, select);
   }
 
-  async removeChat(_id: Types.ObjectId) {
+  async removeChat(_id: Types.ObjectId | string) {
     return this.chatModel.deleteOne({ _id });
+  }
+
+  async userHasAccessToChat({
+    chatId,
+    userId,
+  }: {
+    chatId: Types.ObjectId | string;
+    userId: Types.ObjectId | string;
+  }) {
+    const chat = await this.chatModel.findOne({
+      _id: chatId,
+      $or: [
+        { participant1: userId },
+        { participant2: userId },
+        { participants: userId },
+      ],
+    });
+    return chat;
   }
 }

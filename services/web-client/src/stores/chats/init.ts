@@ -1,6 +1,5 @@
 import {
   $chatsStore,
-  getChatsFx,
   createDirectChatFx,
   createGroupChatFx,
   deleteChatFx,
@@ -9,64 +8,74 @@ import {
   resetChatStore,
   resetChatsStore,
   loadNextChatsPage,
+  getChatsFx,
+  addNewChatEvent,
 } from "./model";
 import { $authStore } from "../auth/model";
 import { sample } from "effector";
 import { FetchItemshModes } from "@/constants/http";
 
-$chatsStore.on(getChatsFx.done, (state, { params, result }) => {
-  if (!result?.chats) {
-    return state;
-  }
-  const chats =
-    params.mode === FetchItemshModes.append
-      ? [...state.chats, ...result.chats]
-      : result.chats;
-  return { ...result, chats };
-});
+$chatsStore
+  .on(getChatsFx.done, (state, { params, result }) => {
+    if (!result?.chats) {
+      return state;
+    }
+    const chats =
+      params.mode === FetchItemshModes.append
+        ? [...state.chats, ...result.chats]
+        : result.chats;
+    return { ...result, chats };
+  })
+  .on(createDirectChatFx.doneData, (state, payload) => {
+    if (!payload?.chat) {
+      return state;
+    }
+    return {
+      ...state,
+      ...payload,
+      chats: [payload.chat, ...state.chats],
+    };
+  })
+  .on(createGroupChatFx.doneData, (state, payload) => {
+    if (!payload?.chat) {
+      return state;
+    }
+    return {
+      ...state,
+      ...payload,
+      chats: [payload.chat, ...state.chats],
+    };
+  })
+  .on(deleteChatFx.doneData, (state, payload) => {
+    if (!payload.id) {
+      return state;
+    }
+    return {
+      ...state,
+      ...payload,
+      chats: state.chats.filter((chat) => chat.id !== payload.id),
+    };
+  })
+  .on(addNewChatEvent, (state, payload) => {
+    if (!payload?.chat) {
+      return state;
+    }
+    return {
+      ...state,
+      chats: [payload.chat, ...state.chats],
+    }
+  });
 
-$chatsStore.on(createDirectChatFx.doneData, (state, payload) => {
-  if (!payload?.chat) {
-    return state;
-  }
-  return {
-    ...state,
-    ...payload,
-    chats: [payload.chat, ...state.chats],
-  };
-});
-$chatsStore.on(createGroupChatFx.doneData, (state, payload) => {
-  if (!payload?.chat) {
-    return state;
-  }
-  return {
-    ...state,
-    ...payload,
-    chats: [payload.chat, ...state.chats],
-  };
-});
-
-$chatStore.on(createDirectChatFx.doneData, (state, payload) => {
-  if (!payload.chat) {
-    return state;
-  }
-  return { chat: payload.chat };
-});
-
-$chatStore.on(openChatEvent, (_, payload) => {
-  return { chat: payload };
-});
-
-$chatsStore.on(deleteChatFx.doneData, (state, payload) => {
-  if (!payload.id) {
-    return state;
-  }
-  return {
-    ...state,
-    ...payload,
-    chats: state.chats.filter((chat) => chat.id !== payload.id),
-  };
-});
+$chatStore
+  .on(createDirectChatFx.doneData, (state, payload) => {
+    if (!payload.chat) {
+      return state;
+    }
+    return { chat: payload.chat };
+  })
+  .on(openChatEvent, (_, payload) => {
+    return { chat: payload };
+  });
 
 sample({
   clock: $authStore,
@@ -84,7 +93,7 @@ sample({
     return {
       cursor,
       mode: FetchItemshModes.append,
-    }
+    };
   },
   target: getChatsFx,
 });

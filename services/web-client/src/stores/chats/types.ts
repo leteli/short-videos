@@ -6,7 +6,7 @@ export interface IChatsStore {
     hasMore: boolean;
     cursor?: string; 
 }
-type IChatInfo = IDirectChatInfo | IGroupChatInfo;
+export type IChatInfo = IDirectChatInfo | IGroupChatInfo;
 
 export interface IDirectChatInfo {
     id: string;
@@ -62,4 +62,8 @@ export interface IDeletChatResponse {
     id: string;
     cursor?: string;
     hasMore: boolean; 
+}
+
+export interface IChatCreatedPayload {
+  chat: IChatInfo;
 }
