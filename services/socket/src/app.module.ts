@@ -1,9 +1,10 @@
 import { Module } from '@nestjs/common';
-import { ConfigModule } from '@nestjs/config';
+import { ConfigModule, ConfigService } from '@nestjs/config';
+import { JwtModule } from '@nestjs/jwt';
 
-import { RabbitMqController } from 'src/rabbitmq/rabbitmq.controller';
-import { SocketGateway } from 'src/gateway/socket.gateway';
 import configuration from 'src/common/config';
+import { RabbitMqModule } from './rabbitmq/rabbitmq.module';
+import { SocketModule } from './gateway/socket.module';
 
 @Module({
   imports: [
@@ -11,8 +12,22 @@ import configuration from 'src/common/config';
       load: [configuration],
       isGlobal: true,
     }),
+    JwtModule.registerAsync({
+      global: true,
+      imports: [ConfigModule],
+      useFactory: (config: ConfigService) => {
+        const expiresInDays = config.get<string>('auth.jwtTokenExpiresInDays');
+        return {
+          secret: config.get<string>('auth.jwtTokenSecret'),
+          signOptions: {
+            expiresIn: `${expiresInDays}d`,
+          },
+        };
+      },
+      inject: [ConfigService],
+    }),
+    RabbitMqModule,
+    SocketModule,
   ],
-  controllers: [RabbitMqController],
-  providers: [SocketGateway],
 })
 export class AppModule {}

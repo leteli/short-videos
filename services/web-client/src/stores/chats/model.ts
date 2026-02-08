@@ -9,6 +9,7 @@ import {
   ICreateGroupChatRequest,
   ICreateGroupChatResponse,
   IGetChatsParams,
+  IChatCreatedPayload,
 } from "./types";
 import { handleGetChats } from "./handlers/handleGetChats";
 import { handleCreateDirectChat } from "./handlers/handleCreateDirectChat";
@@ -19,7 +20,7 @@ export const $chatsStore = chatsDomain.createStore<IChatsStore>({
   chats: [],
   hasMore: false,
   cursor: undefined,
-});
+}, { sid: "chats/store" });
 export const resetChatsStore = chatsDomain.createEvent();
 $chatsStore.reset(resetChatsStore);
 
@@ -52,3 +53,4 @@ export const resetChatStore = chatsDomain.createEvent();
 $chatStore.reset(resetChatStore);
 
 export const openChatEvent = chatsDomain.createEvent<IDirectChatInfo | IGroupChatInfo>();
+export const addNewChatEvent = chatsDomain.createEvent<IChatCreatedPayload>();

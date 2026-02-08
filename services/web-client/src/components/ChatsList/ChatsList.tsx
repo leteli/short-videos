@@ -1,22 +1,35 @@
 "use client";
+
 import { useUnit } from "effector-react";
 import useInfiniteScroll from "react-infinite-scroll-hook";
-import { $chatsStore, $chatStore, getChatsFx, openChatEvent, loadNextChatsPage } from "@/stores";
+import {
+  $chatsStore,
+  $chatStore,
+  openChatEvent,
+  loadNextChatsPage,
+  getChatsFx,
+  addNewChatEvent,
+} from "@/stores";
 import { useBool } from "@/hooks/useBool";
 import { Text, Variants, Tags } from "../common/Text/Text";
 import { Loader, LoaderSizes } from "../common/Loader/Loader";
 import { Button, ButtonSize, ButtonVariant } from "../common/Button/Button";
 import styles from "./ChatsList.module.scss";
 import { AddChatModal } from "../modals/AddChatModal";
+import { useSocketSubscribe } from "@/hooks/useSocketSubscribe";
+import { SocketEvents } from "@/contexts/SocketContext";
+import { socketHandlerType } from "@/utils/types";
 
 export const ChatsList = () => {
-  const { chatsStore, getChatsPending, openChat, loadNextPage } = useUnit({
-    chatsStore: $chatsStore,
-    chatStore: $chatStore,
-    getChatsPending: getChatsFx.pending,
-    openChat: openChatEvent,
-    loadNextPage: loadNextChatsPage,
-  });
+  const { chatsStore, getChatsPending, openChat, loadNextPage, addNewChat } =
+    useUnit({
+      chatsStore: $chatsStore,
+      chatStore: $chatStore,
+      getChatsPending: getChatsFx.pending,
+      openChat: openChatEvent,
+      loadNextPage: loadNextChatsPage,
+      addNewChat: addNewChatEvent,
+    });
   const addChatModal = useBool();
 
   const [infiniteRef, { rootRef }] = useInfiniteScroll({
@@ -26,6 +39,11 @@ export const ChatsList = () => {
     disabled: getChatsPending || !chatsStore.hasMore || !chatsStore.cursor,
     rootMargin: "0px 0px 100px 0px",
     delayInMs: 500,
+  });
+
+  useSocketSubscribe({
+    event: SocketEvents.ChatCreated,
+    handler: addNewChat as socketHandlerType,
   });
 
   return (

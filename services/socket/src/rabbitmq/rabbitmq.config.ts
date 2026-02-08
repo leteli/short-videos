@@ -14,7 +14,7 @@ export const getRabbitMqOptions = (
     options: {
       urls: [`amqp://${user}:${pass}@${host}`],
       queue: queueName,
-      queueOptions: { durable: false },
+      queueOptions: { durable: false }, // TODO: implement durable / persistent
     },
   };
 };

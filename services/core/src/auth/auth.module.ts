@@ -5,7 +5,7 @@ import { UsersModule } from 'src/users/users.module';
 import { AuthController } from './auth.controller';
 import { AuthService } from './auth.service';
 import { RegistrationRequestModule } from 'src/registrationRequest/registrationRequest.module';
-import { QueuePublisherModule } from 'src/queue-publisher/queue-publisher.module';
+import { RabbitMqModule } from 'src/rabbitmq/rabbitmq.module';
 
 @Module({
   imports: [
@@ -25,7 +25,7 @@ import { QueuePublisherModule } from 'src/queue-publisher/queue-publisher.module
       inject: [ConfigService],
     }),
     RegistrationRequestModule,
-    QueuePublisherModule,
+    RabbitMqModule,
   ],
   controllers: [AuthController],
   providers: [AuthService],

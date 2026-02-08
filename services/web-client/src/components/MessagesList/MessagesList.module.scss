@@ -1,0 +1,27 @@
+@use "../../utils/styles/rem.scss" as *;
+
+.container {
+  display: flex;
+  width: 100%;
+  padding: rem(16px);
+  flex: 1 1 auto;
+  overflow-y: auto;
+  min-height: 0;
+  flex-direction: column;
+
+  .list {
+    display: flex;
+    flex-direction: column;
+    gap: rem(16px);
+    width: 100%;
+    min-width: 0;
+    flex: 0 0 auto;
+  }
+
+  .loaderWrapper {
+    display: flex;
+    padding: rem(8px);
+    justify-content: center;
+    align-items: center;
+  }
+}

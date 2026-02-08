@@ -3,6 +3,7 @@
 import clsx from "clsx";
 import { Controller, ControllerProps, FieldValues } from "react-hook-form";
 import { Text, Variants } from "../Text/Text";
+import { IconButton } from "../IconButton/IconButton";
 import styles from "./Input.module.scss";
 import { useMemo } from "react";
 
@@ -11,8 +12,9 @@ export enum InputVariant {
   small = "small",
 }
 
-interface IInputProps
-  extends React.InputHTMLAttributes<HTMLInputElement | HTMLTextAreaElement> {
+interface IInputProps extends React.InputHTMLAttributes<
+  HTMLInputElement | HTMLTextAreaElement
+> {
   className?: string;
   wrapperClassName?: string;
   error?: boolean;
@@ -23,6 +25,8 @@ interface IInputProps
   showRestCounter?: boolean;
   maxLength?: number;
   onChangeExtraHandler?: () => void;
+  EndIncon?: React.FC;
+  onSubmit?: () => void | Promise<void>;
 }
 
 export const Input = ({
@@ -35,6 +39,8 @@ export const Input = ({
   showRestCounter,
   maxLength,
   wrapperClassName,
+  EndIncon,
+  onSubmit,
   ...props
 }: IInputProps) => {
   const restCounterValue = useMemo(
@@ -42,7 +48,7 @@ export const Input = ({
       typeof maxLength === "number"
         ? maxLength - (props.value as string)?.length
         : 0,
-    [props.value, maxLength]
+    [props.value, maxLength],
   );
 
   return (
@@ -69,6 +75,9 @@ export const Input = ({
           {...props}
         />
       )}
+      {EndIncon && onSubmit && (
+        <IconButton Icon={EndIncon} onClick={onSubmit} />
+      )}
       {maxLength && showRestCounter && (
         <Text
           variant={Variants.caption}
@@ -89,9 +98,9 @@ export const Input = ({
 };
 
 export type ControlledInputProps<T extends FieldValues> = {
-  controllerProps: Omit<ControllerProps<T>, 'render'>
+  controllerProps: Omit<ControllerProps<T>, "render">;
   inputProps: IInputProps;
-}
+};
 
 export const ControlledInput = <T extends FieldValues>({
   controllerProps,

@@ -13,7 +13,7 @@ async function bootstrap() {
   app.connectMicroservice<AsyncOptions<MicroserviceOptions>>({
     inject: [ConfigService],
     useFactory: (configService: ConfigService) =>
-      getRabbitMqOptions(configService, QueueNames.SOCKET_EMIT),
+      getRabbitMqOptions(configService, QueueNames.Socket),
   });
 
   await app.listen(socketPort, () => {
