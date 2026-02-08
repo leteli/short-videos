@@ -5,9 +5,15 @@ import { Config } from 'src/common/config';
 export enum QueueNames {
   Core = 'Core',
   Notifications = 'Notifications',
+  Socket = 'Socket',
 }
-export enum PublishedEvents {
+export enum PublishedBrokerEvents {
   SendEmail = 'SendEmail',
+  ChatCreated = 'ChatCreated',
+}
+
+export enum SocketBrokerEvents {
+  CreateMessage = 'CreateMessage',
 }
 
 export const getRabbitMqOptions = (

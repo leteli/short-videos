@@ -6,3 +6,6 @@ export * from './chats/init';
 
 export * from './users/model';
 export * from './users/init';
+
+export * from './messages/model';
+export * from './messages/init';

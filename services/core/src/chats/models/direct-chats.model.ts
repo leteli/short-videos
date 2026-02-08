@@ -8,6 +8,7 @@ export interface IDirectChatDto extends IBasicChatDto {
   peer: string;
 }
 export interface IDirectChatDtoWithUser extends IBasicChatDto {
+  userId: string;
   peer: IBasicUserDto;
 }
 
@@ -54,6 +55,7 @@ export class DirectChat extends Chat {
     const peer = this.getPeerDoc(userId);
     return {
       ...super.toBasicDto(),
+      userId: userId?.toString(),
       peer: peer.toDto(),
     };
   }

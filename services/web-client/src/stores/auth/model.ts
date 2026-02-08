@@ -23,7 +23,7 @@ export const confirmSignupFx = authDomain.createEffect<
   IConfirmSignupResponse
 >(handleConfirmSignup);
 
-export const $authStore = authDomain.createStore<IAuthStore>({ user: null });
+export const $authStore = authDomain.createStore<IAuthStore>({ user: null }, { sid: "auth/store" });
 
 export const loginFx = authDomain.createEffect<ILoginRequest, ILoginResponse>(
   handleLogin

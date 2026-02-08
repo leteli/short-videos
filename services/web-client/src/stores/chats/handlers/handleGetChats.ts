@@ -1,8 +1,7 @@
 import { sendServerHttpRequest } from "@/utils/http/sendServerHttpRequest";
 import { sendHttpRequest } from "@/utils/http/sendHttpRequest";
-import { HttpRequestMethods } from "@/constants/http";
+import { HttpRequestMethods, API_CHATS } from "@/constants/http";
 import { API_CHATS_SERVER  } from "@/constants/serverHttp";
-import { API_CHATS } from "@/constants/http";
 import { IChatsStore, IGetChatsParams } from "../types";
 
 export const handleGetChats = async (params: IGetChatsParams) => {

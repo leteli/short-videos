@@ -10,7 +10,7 @@ import { ConfigService } from '@nestjs/config';
 import { Config } from 'src/common/config';
 import { Response } from 'express';
 import { AUTH_COOKIE_KEY } from 'src/common/constants/app.constants';
-import { QueuePublisherService } from 'src/queue-publisher/queue-publisher.service';
+import { RabbitMqService } from 'src/rabbitmq/rabbitmq.service';
 import { RegistrationRequestService } from 'src/registrationRequest/registrationRequest.service';
 import { EmailTypes, getEmailContent } from 'src/common/utils/email';
 
@@ -20,7 +20,7 @@ export class AuthService {
     private usersService: UsersService,
     private jwtService: JwtService,
     private configService: ConfigService,
-    private queueService: QueuePublisherService,
+    private queueService: RabbitMqService,
     private registrationRequestService: RegistrationRequestService,
   ) {}
   async requestSignup(data: SignupDto) {

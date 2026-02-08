@@ -12,23 +12,28 @@ import {
   Query,
 } from '@nestjs/common';
 import { ChatsService } from './chats.service';
-import { CreateDirectChatDto, CreateGroupChatDto } from './chats.dto';
+import { CreateGroupChatDto } from './chats.dto';
 import { AuthGuard } from 'src/auth/auth.guard';
 import { IRequest } from 'src/common/utils/http/types';
 import { UserDocument } from 'src/users/users.model';
 import { Types } from 'mongoose';
 import { ParseObjectIdPipe } from 'src/common/pipes/parse-object-id.pipe';
 import { ParseObjectIdArrayPipe } from 'src/common/pipes/parse-object-id-array.pipe';
+import { RabbitMqService } from 'src/rabbitmq/rabbitmq.service';
+import { ChatAccessGuard } from './chat.guard';
+import { ChatDocument } from './models/chats.model';
 
 @UseGuards(AuthGuard)
 @Controller('chats')
 export class ChatsController {
-  constructor(private readonly chatsService: ChatsService) {}
+  constructor(
+    private readonly chatsService: ChatsService,
+    private queuePubService: RabbitMqService,
+  ) {}
 
   @Post('/direct')
   @HttpCode(HttpStatus.CREATED)
   public async postDirectChat(
-    @Body() createChatDto: CreateDirectChatDto,
     @Body('participantId', ParseObjectIdPipe)
     participantId: Types.ObjectId,
     @Req() req: IRequest & { user: UserDocument },
@@ -42,6 +47,13 @@ export class ChatsController {
       participant1: UserDocument;
       participant2: UserDocument;
     }>('participant1 participant2');
+
+    const chatDtoForPeer = populatedChat.toDtoWithUsers({
+      userId: participantId,
+    });
+    this.queuePubService.handleChatCreated({
+      chat: chatDtoForPeer,
+    });
     return {
       chat: populatedChat.toDtoWithUsers({ userId }),
     };
@@ -76,12 +88,14 @@ export class ChatsController {
     });
   }
 
+  @UseGuards(ChatAccessGuard)
   @Get(':id')
   @HttpCode(HttpStatus.OK)
-  getChat(@Param('id', ParseObjectIdPipe) id: Types.ObjectId) {
-    return this.chatsService.findChatById(id);
+  getChat(@Req() req: IRequest & { chat: ChatDocument }) {
+    return req.chat;
   }
 
+  @UseGuards(ChatAccessGuard)
   @Delete(':id')
   @HttpCode(HttpStatus.OK)
   deleteChat(@Param('id', ParseObjectIdPipe) id: Types.ObjectId) {

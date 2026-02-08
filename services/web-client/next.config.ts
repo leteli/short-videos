@@ -2,9 +2,11 @@ import type { NextConfig } from "next";
 import { CHATS_ROUTE } from "@/constants/clientRoutes";
 
 const nextConfig: NextConfig = {
-  experimental: {
-    swcPlugins: [["@effector/swc-plugin", {}]],
-  },
+  compiler: {
+    effector: {
+      ssr: true,
+    },
+  } as unknown as NextConfig["compiler"],
   async redirects() {
     return [{
     source: '/',
